@@ -13,7 +13,9 @@ class NewsSourcesSeeder extends Seeder
      */
     public function run(): void
     {
-        collect(['NewsAPI', 'OpenNews', 'NewsCred', 'TheGuardian', 'New York Times', 'BBC News', 'NewsAPI.org'])
-            ->map(fn($source) => NewsSource::firstOrCreate(['name' => $source]));
+        collect(['NewsAPI.org', 'The Guardian', 'New York Times'])
+            ->map(function ($source) {
+                NewsSource::firstOrCreate(['name' => $source]);
+            });
     }
 }

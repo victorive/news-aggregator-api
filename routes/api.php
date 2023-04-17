@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\News\NewsController;
+use App\Http\Controllers\Api\News\NewsSourcesController;
+use App\Http\Controllers\Api\User\UserPreferencesController;
+use App\Http\Controllers\Api\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +19,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/auth')->group(function () {
-    Route::post('/register', RegisterController::class);
-    Route::post('/login', LoginController::class)->name('login');
+Route::prefix('v1')->group(function () {
+
+    Route::prefix('auth')->group(function () {
+        Route::post('/register', RegisterController::class);
+        Route::post('/login', LoginController::class)->name('login');
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/profile', UserProfileController::class);
+        Route::post('/preferences', UserPreferencesController::class);
+        Route::get('/news-sources', NewsSourcesController::class);
+        Route::get('/news', NewsController::class);
+    });
 });
