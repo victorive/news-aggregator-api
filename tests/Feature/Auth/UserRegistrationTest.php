@@ -29,6 +29,13 @@ class UserRegistrationTest extends TestCase
             ]);
     }
 
+    public function testUserCannotRegisterWithInvalidCredentials(): void
+    {
+        $this->postJson($this->url, [$this->getInvalidUserRegistrationPayload()])
+            ->assertUnprocessable()
+            ->assertSee('is required');
+    }
+
     public function testDatabaseHasUserCredentialsAfterRegistration(): void
     {
         $this->postJson($this->url, $this->getValidUserRegistrationPayload());
@@ -57,6 +64,16 @@ class UserRegistrationTest extends TestCase
             'email' => $this->validUserCredentials->email,
             'password' => $this->validUserCredentials->password,
             'password_confirmation' => $this->validUserCredentials->password,
+        ];
+    }
+
+    private function getInvalidUserRegistrationPayload(): array
+    {
+        return [
+            'name' => '',
+            'email' => '',
+            'password' => '',
+            'password_confirmation' => '',
         ];
     }
 }

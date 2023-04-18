@@ -45,6 +45,8 @@ class User extends Authenticatable
 
     public function newsSources(): BelongsToMany
     {
-        return $this->belongsToMany(NewsSource::class, 'user_news_preferences')->withTimestamps();
+        return $this->belongsToMany(NewsSource::class, 'user_preferences')
+            ->withPivot(['author_id', 'category_id'])
+            ->withTimestamps();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\News\NewsController;
 use App\Http\Controllers\Api\News\NewsSourceController;
@@ -27,6 +28,8 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', LogoutController::class);
+
         Route::get('/profile', UserProfileController::class);
         Route::post('/preferences', UserPreferenceController::class);
         Route::get('/news-sources', NewsSourceController::class);

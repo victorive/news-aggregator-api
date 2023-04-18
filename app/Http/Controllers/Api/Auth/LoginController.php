@@ -23,6 +23,15 @@ class LoginController extends Controller
 
         if ($user instanceof User) {
 
+            $userToken = $user->tokens()->where('name', 'token')->first();
+
+            if ($userToken) {
+
+                return response()->json([
+                    'message' => 'You\'re already logged in',
+                ], 200);
+            }
+
             $token = $user->createToken('token')->plainTextToken;
         }
 

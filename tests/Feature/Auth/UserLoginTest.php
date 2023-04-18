@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserLoginTest extends TestCase
@@ -33,5 +32,16 @@ class UserLoginTest extends TestCase
                 'message' => 'Login successful',
                 'token' => $response->json('token'),
             ]);
+    }
+
+    public function testUserCannotLoginWithInvalidCredentials(): void
+    {
+        $response = $this->postJson($this->url, [
+            'email' => '',
+            'password' => '',
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertSee('is required');
     }
 }
