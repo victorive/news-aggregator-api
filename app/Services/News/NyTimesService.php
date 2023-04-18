@@ -9,14 +9,9 @@ use Illuminate\Support\Facades\Http;
 
 class NyTimesService extends NewsServiceAbstract
 {
-    private string $url;
-
-    private string $key;
-
     public function __construct()
     {
-        $this->url = config('services.ny-times.url');
-        $this->key = config('services.ny-times.key');
+        parent::__construct(config('services.ny-times.url'), config('services.ny-times.key'));
     }
 
     public function processAndStoreData(): void
@@ -54,7 +49,7 @@ class NyTimesService extends NewsServiceAbstract
                 'description' => $news['abstract'],
                 'content' => null,
                 'secondary_news_url' => null,
-                'image_url' => $news['multimedia'][0]['url'],
+                'image_url' => $news['multimedia'][0]['url'] ?? null,
                 'published_at' => Carbon::parse($news['published_date'])->toDateTimeString(),
                 'created_at' => now(),
                 'updated_at' => now()

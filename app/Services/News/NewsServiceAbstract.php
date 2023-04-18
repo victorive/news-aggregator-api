@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 abstract class NewsServiceAbstract
 {
-    abstract public function __construct();
+    public function __construct(protected string $url, protected string $key)
+    {}
 
     public function processAndStoreData(): void
     {

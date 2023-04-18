@@ -9,14 +9,9 @@ use Illuminate\Support\Facades\Http;
 
 class NewsApiService extends NewsServiceAbstract
 {
-    private string $url;
-
-    private string $key;
-
     public function __construct()
     {
-        $this->url = config('services.news-api.url');
-        $this->key = config('services.news-api.key');
+        parent::__construct(config('services.news-api.url'), config('services.news-api.key'));
     }
 
     public function processAndStoreData(): void

@@ -9,14 +9,9 @@ use Illuminate\Support\Facades\Http;
 
 class TheGuardianService extends NewsServiceAbstract
 {
-    private string $url;
-
-    private string $key;
-
     public function __construct()
     {
-        $this->url = config('services.the-guardian.url');
-        $this->key = config('services.the-guardian.key');
+        parent::__construct(config('services.the-guardian.url'), config('services.the-guardian.key'));
     }
 
     public function processAndStoreData(): void
