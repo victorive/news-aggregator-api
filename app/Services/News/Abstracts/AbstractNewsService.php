@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Services\News;
+namespace App\Services\News\Abstracts;
 
 use App\Models\News;
 use App\Models\NewsSource;
 use Illuminate\Support\Facades\DB;
 
-abstract class NewsServiceAbstract
+abstract class AbstractNewsService
 {
     public function __construct(protected string $url, protected string $key)
-    {}
+    {
+    }
 
     public function processAndStoreData(): void
     {

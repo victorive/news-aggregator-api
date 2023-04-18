@@ -4,10 +4,11 @@ namespace App\Services\News;
 
 use App\Models\Author;
 use App\Models\Category;
+use App\Services\News\Abstracts\AbstractNewsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class TheGuardianService extends NewsServiceAbstract
+class TheGuardianService extends AbstractNewsService
 {
     public function __construct()
     {
@@ -31,6 +32,8 @@ class TheGuardianService extends NewsServiceAbstract
                 'show-fields' => 'byline,headline,thumbnail,trailText'
             ]);
 
+        $response->throwIf(!$response->successful());
+
         return $response->json();
     }
 
@@ -45,7 +48,7 @@ class TheGuardianService extends NewsServiceAbstract
             return [
                 'news_source_id' => $newsSourceId,
                 'secondary_news_source' => null,
-                'author_id' => $author->id ?? null,
+                'author_id' => $author->id,
                 'category_id' => $category->id,
                 'title' => $news['fields']['headline'],
                 'description' => null,

@@ -8,8 +8,6 @@ use Tests\TestCase;
 
 class UserLoginTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $validUserCredentials;
 
     private string $url = 'api/v1/auth/login';

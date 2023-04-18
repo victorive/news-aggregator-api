@@ -34,7 +34,13 @@ class TheGuardianServiceCommand extends Command
     {
         Log::info('The Guardian service starting...');
 
-        $this->theGuardianService->processAndStoreData();
+        try {
+            $this->theGuardianService->processAndStoreData();
+
+            Log::info('The Guardian service ran successfully');
+        } catch (\Exception $exception) {
+            Log::info('Error calling The Guardian service: ' . $exception->getMessage());
+        }
 
         Log::info('The Guardian service command finished');
     }

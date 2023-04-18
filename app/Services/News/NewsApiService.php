@@ -4,10 +4,11 @@ namespace App\Services\News;
 
 use App\Models\Author;
 use App\Models\Category;
+use App\Services\News\Abstracts\AbstractNewsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class NewsApiService extends NewsServiceAbstract
+class NewsApiService extends AbstractNewsService
 {
     public function __construct()
     {
@@ -26,7 +27,9 @@ class NewsApiService extends NewsServiceAbstract
     {
         $response = Http::accept('application/json')
             ->withToken($this->key)
-            ->get($this->url . '/top-headlines?country=gb&pageSize=100');
+            ->get($this->url . '/top-headlines?country=gb&pageSize=100&category=general');
+
+        $response->throwIf(!$response->successful());
 
         return $response->json();
     }
@@ -37,13 +40,13 @@ class NewsApiService extends NewsServiceAbstract
 
         return array_map(function ($news) use ($newsSourceId) {
             $author = $this->createOrFindModel(Author::class, ['name' => $news['author']]);
-//            $category = $this->createOrFindModel(Category::class, ['name' => $news['category']]);
+            $category = $this->createOrFindModel(Category::class, ['name' => 'general']);
 
             return [
                 'news_source_id' => $newsSourceId,
                 'secondary_news_source' => $news['source']['name'],
-                'author_id' => $author->id ?? 1,
-                'category_id' => 1,
+                'author_id' => $author->id,
+                'category_id' => $category->id,
                 'title' => $news['title'],
                 'description' => $news['description'],
                 'content' => $news['content'],

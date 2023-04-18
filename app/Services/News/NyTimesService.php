@@ -4,10 +4,11 @@ namespace App\Services\News;
 
 use App\Models\Author;
 use App\Models\Category;
+use App\Services\News\Abstracts\AbstractNewsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class NyTimesService extends NewsServiceAbstract
+class NyTimesService extends AbstractNewsService
 {
     public function __construct()
     {
@@ -28,6 +29,8 @@ class NyTimesService extends NewsServiceAbstract
             ->get($this->url . '/topstories/v2/home.json', [
                 'api-key' => $this->key
             ]);
+
+        $response->throwIf(!$response->successful());
 
         return $response->json();
     }

@@ -8,8 +8,6 @@ use Tests\TestCase;
 
 class UserLogoutTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $validUserCredentials;
 
     protected function setUp(): void

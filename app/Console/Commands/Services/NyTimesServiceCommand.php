@@ -34,7 +34,13 @@ class NyTimesServiceCommand extends Command
     {
         Log::info('New York Times service starting...');
 
-        $this->nyTimesService->processAndStoreData();
+        try {
+            $this->nyTimesService->processAndStoreData();
+
+            Log::info('New York Times service ran successfully');
+        } catch (\Exception $exception) {
+            Log::info('Error calling New York Times service: ' . $exception->getMessage());
+        }
 
         Log::info('New York Times service finished');
     }

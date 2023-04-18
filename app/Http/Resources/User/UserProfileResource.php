@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\User;
 
+use App\Models\Author;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,12 +20,28 @@ class UserProfileResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'preferences' => $this->newsSources->map(function ($newsSources) {
-                return [
-                    'id' => $newsSources->id,
-                    'name' => $newsSources->name
-                ];
-            })
+            'preferences' => [
+                'authors' => $this->newsSources->map(function ($newsSource) {
+                    $author = Author::find($newsSource->pivot->author_id);
+                    return [
+                        'id' => $newsSource->pivot->author_id,
+                        'name' => $author->name ?? null
+                    ];
+                }),
+                'news-sources' => $this->newsSources->map(function ($newsSources) {
+                    return [
+                        'id' => $newsSources->id,
+                        'name' => $newsSources->name
+                    ];
+                }),
+                'categories' => $this->newsSources->map(function ($newsSource) {
+                    $category = Category::find($newsSource->pivot->category_id);
+                    return [
+                        'id' => $newsSource->pivot->category_id,
+                        'name' => $category->name ?? null
+                    ];
+                }),
+            ],
         ];
     }
 }
