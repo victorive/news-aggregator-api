@@ -8,7 +8,7 @@ use App\Models\NewsSource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class NewsSourcesController extends Controller
+class NewsSourceController extends Controller
 {
     public function __invoke(): JsonResource
     {

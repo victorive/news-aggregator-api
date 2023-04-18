@@ -3,8 +3,8 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\News\NewsController;
-use App\Http\Controllers\Api\News\NewsSourcesController;
-use App\Http\Controllers\Api\User\UserPreferencesController;
+use App\Http\Controllers\Api\News\NewsSourceController;
+use App\Http\Controllers\Api\User\UserPreferenceController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,8 +28,8 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', UserProfileController::class);
-        Route::post('/preferences', UserPreferencesController::class);
-        Route::get('/news-sources', NewsSourcesController::class);
+        Route::post('/preferences', UserPreferenceController::class);
+        Route::get('/news-sources', NewsSourceController::class);
         Route::get('/news', NewsController::class);
     });
 });

@@ -16,12 +16,12 @@ return new class extends Migration {
             $table->string('secondary_news_source')->nullable();
             $table->foreignId('author_id')->constrained('authors')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->string('title');
-            $table->text('description');
-            $table->text('content');
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->text('content')->nullable();
             $table->text('secondary_news_url')->nullable();
             $table->text('image_url')->nullable();
-            $table->timestamp('published_at');
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

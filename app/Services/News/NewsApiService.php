@@ -4,13 +4,10 @@ namespace App\Services\News;
 
 use App\Models\Author;
 use App\Models\Category;
-use App\Models\News;
-use App\Models\NewsSource;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
-class NewsApiService
+class NewsApiService extends NewsServiceAbstract
 {
     private string $url;
 
@@ -24,38 +21,34 @@ class NewsApiService
 
     public function processAndStoreData(): void
     {
-        $data = $this->getData('bitcoin');
+        $data = $this->getData();
         $data = $this->cleanData($data);
 
-        $dataChunk = collect($data)->chunk(5000);
-
-        foreach ($dataChunk as $chunk) {
-            $this->storeData($chunk->toArray());
-        }
+        $this->storeData($data);
     }
 
-    private function getData(string $searchTerm): array
+    protected function getData(): array
     {
         $response = Http::accept('application/json')
             ->withToken($this->key)
-            ->get($this->url . '/everything?q=' . $searchTerm);
+            ->get($this->url . '/top-headlines?country=gb&pageSize=100');
 
         return $response->json();
     }
 
-    private function cleanData(array $data): array
+    protected function cleanData(array $data): array
     {
         $newsSourceId = $this->getNewsSourceId('NewsAPI.org');
 
         return array_map(function ($news) use ($newsSourceId) {
             $author = $this->createOrFindModel(Author::class, ['name' => $news['author']]);
-            $category = $this->createOrFindModel(Category::class, ['name' => $news['category']]);
+//            $category = $this->createOrFindModel(Category::class, ['name' => $news['category']]);
 
             return [
                 'news_source_id' => $newsSourceId,
                 'secondary_news_source' => $news['source']['name'],
-                'author_id' => $author->id,
-                'category_id' => $category->id,
+                'author_id' => $author->id ?? 1,
+                'category_id' => 1,
                 'title' => $news['title'],
                 'description' => $news['description'],
                 'content' => $news['content'],
@@ -66,24 +59,5 @@ class NewsApiService
                 'updated_at' => now()
             ];
         }, $data['articles']);
-    }
-
-    private function getNewsSourceId(string $sourceName): int
-    {
-        return NewsSource::where('name', $sourceName)->value('id');
-    }
-
-    private function createOrFindModel($model, $data)
-    {
-        return $model::firstOrCreate($data);
-    }
-
-    private function storeData(array $news): void
-    {
-        DB::beginTransaction();
-
-        News::insert($news);
-
-        DB::commit();
     }
 }
