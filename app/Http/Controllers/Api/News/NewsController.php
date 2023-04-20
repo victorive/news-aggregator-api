@@ -8,14 +8,23 @@ use App\Http\Filters\News\CategoryFilter;
 use App\Http\Filters\News\NewsSourceFilter;
 use App\Http\Resources\News\NewsResource;
 use App\Models\News;
+use App\Services\News\NewsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Exceptions\InvalidFieldQuery;
+use Spatie\QueryBuilder\Exceptions\InvalidFilterQuery;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class NewsController extends Controller
 {
-    public function __invoke(Request $request): JsonResource
+    public function __construct(private readonly NewsService $newsService)
+    {
+    }
+
+    public function __invoke(Request $request): JsonResource|JsonResponse
     {
         $user = $request->user();
 
@@ -23,19 +32,22 @@ class NewsController extends Controller
         $categories = $user->categories->pluck('id')->toArray();
         $newsSources = $user->newsSources->pluck('id')->toArray();
 
-        $news = QueryBuilder::for(News::class)
-            ->with(['author', 'category', 'newsSource'])
-            ->where(function ($query) use ($authors, $categories, $newsSources) {
-                $query->whereIn('author_id', $authors)
-                    ->orWhereIn('category_id', $categories)
-                    ->orWhereIn('news_source_id', $newsSources);
-            })
-            ->allowedFilters([
-                AllowedFilter::custom('author_id', new AuthorFilter()),
-                AllowedFilter::custom('category_id', new CategoryFilter()),
-                AllowedFilter::custom('news_source_id', new NewsSourceFilter()),
-            ])
-            ->get();
+        try {
+            $news = $this->newsService->getNews($authors, $categories, $newsSources);
+
+            if ($news->isEmpty()) {
+                return response()->json([
+                    'message' => 'No news found',
+                ]);
+            }
+        } catch (InvalidFilterQuery $invalidFilterQuery) {
+
+            Log::error($invalidFilterQuery);
+
+            return response()->json([
+                'message' => 'Invalid filter'
+            ]);
+        }
 
         return NewsResource::collection($news);
     }
