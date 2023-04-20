@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\AuthorController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\News\NewsController;
 use App\Http\Controllers\Api\News\NewsSourceController;
 use App\Http\Controllers\Api\User\UserPreferenceController;
@@ -33,6 +35,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile', UserProfileController::class);
         Route::post('/preferences', UserPreferenceController::class);
         Route::get('/news-sources', NewsSourceController::class);
+        Route::get('/authors', AuthorController::class);
+        Route::get('/categories', CategoryController::class);
         Route::get('/news', NewsController::class);
     });
 });
