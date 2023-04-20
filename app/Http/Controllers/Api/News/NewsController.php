@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\News;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\News\AuthorFilter;
+use App\Http\Filters\News\CategoryFilter;
+use App\Http\Filters\News\NewsSourceFilter;
 use App\Http\Resources\News\NewsResource;
 use App\Models\News;
 use Illuminate\Http\Request;
@@ -21,15 +24,17 @@ class NewsController extends Controller
         $newsSources = $user->newsSources->pluck('id')->toArray();
 
         $news = QueryBuilder::for(News::class)
-            ->allowedFilters([
-                'author_id',
-                'category_id',
-                'news_source_id',
-            ])
             ->with(['author', 'category', 'newsSource'])
-            ->whereIn('author_id', $authors)
-            ->orWhereIn('category_id', $categories)
-            ->orWhereIn('news_source_id', $newsSources)
+            ->where(function ($query) use ($authors, $categories, $newsSources) {
+                $query->whereIn('author_id', $authors)
+                    ->orWhereIn('category_id', $categories)
+                    ->orWhereIn('news_source_id', $newsSources);
+            })
+            ->allowedFilters([
+                AllowedFilter::custom('author_id', new AuthorFilter()),
+                AllowedFilter::custom('category_id', new CategoryFilter()),
+                AllowedFilter::custom('news_source_id', new NewsSourceFilter()),
+            ])
             ->get();
 
         return NewsResource::collection($news);
