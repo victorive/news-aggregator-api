@@ -39,7 +39,7 @@ class TheGuardianServiceCommand extends Command
 
             Log::info('The Guardian service ran successfully');
         } catch (\Exception $exception) {
-            Log::info('Error calling The Guardian service: ' . $exception->getMessage());
+            Log::error('Error calling The Guardian service: ' . $exception->getMessage());
         }
 
         Log::info('The Guardian service command finished');

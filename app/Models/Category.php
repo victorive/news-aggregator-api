@@ -16,8 +16,6 @@ class Category extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_preferences')
-            ->withPivot(['news_source_id', 'author_id'])
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'users_categories')->withTimestamps();
     }
 }

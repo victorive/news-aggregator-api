@@ -44,10 +44,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function authors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'users_authors');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'users_categories');
+    }
+
     public function newsSources(): BelongsToMany
     {
-        return $this->belongsToMany(NewsSource::class, 'user_preferences')
-            ->withPivot(['author_id', 'category_id'])
-            ->withTimestamps();
+        return $this->belongsToMany(NewsSource::class, 'users_news_sources');
     }
 }

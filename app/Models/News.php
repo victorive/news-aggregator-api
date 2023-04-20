@@ -26,31 +26,31 @@ class News extends Model
 
     public function newsSource(): BelongsTo
     {
-        return $this->belongsTo(NewsSource::class);
+        return $this->belongsTo(NewsSource::class, 'news_source_id');
     }
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(Author::class);
+        return $this->belongsTo(Author::class, 'author_id');
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function getNewsSourceNameAttribute(): ?string
+    public function getNewsSourceNameAttribute(): string
     {
-        return optional($this->newsSource)->name;
+        return $this->newsSource->name;
     }
 
-    public function getAuthorNameAttribute(): ?string
+    public function getAuthorNameAttribute(): string
     {
-        return optional($this->author)->name;
+        return $this->author->name;
     }
 
-    public function getCategoryNameAttribute(): ?string
+    public function getCategoryNameAttribute(): string
     {
-        return optional($this->category)->name;
+        return $this->category->name;
     }
 }

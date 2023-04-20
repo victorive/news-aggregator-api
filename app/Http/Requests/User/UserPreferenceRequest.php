@@ -22,9 +22,9 @@ class UserPreferenceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'news_source_id' => 'required|array',
-            'category_id' => 'required|array',
-            'author_id' => 'required|array'
+            'news_source_id' => 'array',
+            'category_id' => 'array',
+            'author_id' => 'array'
         ];
     }
 }

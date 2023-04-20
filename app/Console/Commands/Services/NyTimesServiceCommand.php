@@ -39,7 +39,7 @@ class NyTimesServiceCommand extends Command
 
             Log::info('New York Times service ran successfully');
         } catch (\Exception $exception) {
-            Log::info('Error calling New York Times service: ' . $exception->getMessage());
+            Log::error('Error calling New York Times service: ' . $exception->getMessage());
         }
 
         Log::info('New York Times service finished');

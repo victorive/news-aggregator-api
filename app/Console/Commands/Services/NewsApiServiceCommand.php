@@ -38,7 +38,7 @@ class NewsApiServiceCommand extends Command
 
             Log::info('NewsAPI.org service ran successfully');
         } catch (\Exception $exception) {
-            Log::info('Error calling NewsAPI.org service: ' . $exception->getMessage());
+            Log::error('Error calling NewsAPI.org service: ' . $exception->getMessage());
         }
 
         Log::info('NewsAPI.org service finished');

@@ -14,8 +14,6 @@ class Author extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_preferences')
-            ->withPivot(['news_source_id', 'category_id'])
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'users_authors')->withTimestamps();
     }
 }

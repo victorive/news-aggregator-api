@@ -17,8 +17,6 @@ class NewsSource extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withPivot(['author_id', 'category_id'])
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'users_news_sources')->withTimestamps();
     }
 }

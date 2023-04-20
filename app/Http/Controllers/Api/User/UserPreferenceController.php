@@ -30,7 +30,7 @@ class UserPreferenceController extends Controller
             ], 201);
 
         } catch (\Exception $exception) {
-            Log::info($exception->getMessage());
+            Log::error($exception->getMessage());
 
             return response()->json([
                 'message' => 'Failed to save preference',
