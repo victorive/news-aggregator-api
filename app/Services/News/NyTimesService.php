@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Http;
 
 class NyTimesService extends AbstractNewsService
 {
+
+    private string $url;
+
+    private string $key;
+
     public function __construct()
     {
-        parent::__construct(config('services.ny-times.url'), config('services.ny-times.key'));
+        $this->url = config('services.ny-times.url');
+        $this->key = config('services.ny-times.key');
     }
 
     public function processAndStoreData(): void
